@@ -1,0 +1,83 @@
+name: Terraform - 05-vpc-demo+compute+security-groups (plan + apply-on-main)
+
+on:
+  push:
+    paths:
+      - '05-vpc-demo+compute+security-groups/**'
+  pull_request:
+    paths:
+      - '05-vpc-demo+compute+security-groups/**'
+  workflow_dispatch:
+
+jobs:
+  plan:
+    name: Plan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5.7'
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive
+        working-directory: "05-vpc-demo+compute+security-groups"
+
+      - name: Terraform init
+        run: terraform init -input=false
+        working-directory: "05-vpc-demo+compute+security-groups"
+
+      - name: Terraform validate
+        run: terraform validate
+        working-directory: "05-vpc-demo+compute+security-groups"
+
+      - name: Terraform plan (binary)
+        run: terraform plan -out=plan.tfplan
+        working-directory: "05-vpc-demo+compute+security-groups"
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 05-vpc-demo-plan
+          path: "05-vpc-demo+compute+security-groups/plan.tfplan"
+
+  apply:
+    name: Apply (only on main, requires environment approval)
+    runs-on: ubuntu-latest
+    needs: plan
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: apply-05-vpc-demo+compute+security-groups
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5.7'
+
+      - name: Download plan artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 05-vpc-demo-plan
+          path: .
+
+      - name: Terraform init (re-init for apply)
+        run: terraform init -input=false
+        working-directory: "05-vpc-demo+compute+security-groups"
+
+      - name: Terraform apply (from saved plan)
+        run: terraform apply -input=false "05-vpc-demo+compute+security-groups/plan.tfplan"
