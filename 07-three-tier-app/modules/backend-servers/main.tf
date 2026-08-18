@@ -16,10 +16,10 @@ data "aws_ami" "amazon_linux_2" {
 
 # Backend Servers
 resource "aws_instance" "backend" {
-  count                = var.instance_count
-  ami                  = data.aws_ami.amazon_linux_2.id
-  instance_type        = var.instance_type
-  subnet_id            = var.private_subnet_ids[count.index % length(var.private_subnet_ids)]
+  count                  = var.instance_count
+  ami                    = data.aws_ami.amazon_linux_2.id
+  instance_type          = var.instance_type
+  subnet_id              = var.private_subnet_ids[count.index % length(var.private_subnet_ids)]
   vpc_security_group_ids = [var.security_group_id]
 
   user_data = base64encode(templatefile("${path.module}/user_data.sh", {

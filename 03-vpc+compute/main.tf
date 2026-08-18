@@ -195,12 +195,12 @@ resource "aws_security_group" "private_sg" {
 
 # Public EC2 Instances (10 instances)
 resource "aws_instance" "public" {
-  count                = var.public_instance_count
-  ami                  = data.aws_ami.amazon_linux_2.id
-  instance_type        = var.instance_type
-  subnet_id            = aws_subnet.public[count.index % length(aws_subnet.public)].id
+  count                  = var.public_instance_count
+  ami                    = data.aws_ami.amazon_linux_2.id
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.public[count.index % length(aws_subnet.public)].id
   vpc_security_group_ids = [aws_security_group.public_sg.id]
-  
+
   # Enable public IP assignment
   associate_public_ip_address = true
 
@@ -212,10 +212,10 @@ resource "aws_instance" "public" {
 
 # Private EC2 Instances (2 instances)
 resource "aws_instance" "private" {
-  count                = var.private_instance_count
-  ami                  = data.aws_ami.amazon_linux_2.id
-  instance_type        = var.instance_type
-  subnet_id            = aws_subnet.private[count.index % length(aws_subnet.private)].id
+  count                  = var.private_instance_count
+  ami                    = data.aws_ami.amazon_linux_2.id
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.private[count.index % length(aws_subnet.private)].id
   vpc_security_group_ids = [aws_security_group.private_sg.id]
 
   tags = {

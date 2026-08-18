@@ -29,20 +29,20 @@ module "security_groups" {
 module "eks" {
   source = "./modules/eks"
 
-  cluster_name                = var.cluster_name
-  cluster_role_arn            = module.iam.eks_cluster_role_arn
-  node_role_arn               = module.iam.eks_node_role_arn
-  cluster_security_group_id   = module.security_groups.eks_cluster_security_group_id
-  node_security_group_id      = module.security_groups.eks_node_security_group_id
-  private_subnet_ids          = module.vpc.private_subnet_ids
-  public_subnet_ids           = module.vpc.public_subnet_ids
-  kubernetes_version          = var.kubernetes_version
-  desired_size                = var.desired_size
-  min_size                    = var.min_size
-  max_size                    = var.max_size
-  instance_types              = [var.instance_type]
-  iam_policy_attachments      = []
-  node_iam_attachments        = []
+  cluster_name              = var.cluster_name
+  cluster_role_arn          = module.iam.eks_cluster_role_arn
+  node_role_arn             = module.iam.eks_node_role_arn
+  cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
+  node_security_group_id    = module.security_groups.eks_node_security_group_id
+  private_subnet_ids        = module.vpc.private_subnet_ids
+  public_subnet_ids         = module.vpc.public_subnet_ids
+  kubernetes_version        = var.kubernetes_version
+  desired_size              = var.desired_size
+  min_size                  = var.min_size
+  max_size                  = var.max_size
+  instance_types            = [var.instance_type]
+  iam_policy_attachments    = []
+  node_iam_attachments      = []
 }
 
 # Data source to get available AZs in the region

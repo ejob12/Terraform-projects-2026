@@ -1,8 +1,8 @@
 # EKS Cluster
 resource "aws_eks_cluster" "main" {
-  name            = "${var.app_name}-eks"
-  role_arn        = var.cluster_role_arn
-  version         = var.kubernetes_version
+  name     = "${var.app_name}-eks"
+  role_arn = var.cluster_role_arn
+  version  = var.kubernetes_version
 
   vpc_config {
     subnet_ids              = concat(var.private_subnet_ids, var.public_subnet_ids)

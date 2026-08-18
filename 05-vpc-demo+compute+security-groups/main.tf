@@ -203,13 +203,13 @@ resource "aws_security_group" "db_sg" {
 # ===== EC2 INSTANCES - WEB SERVERS (PUBLIC) =====
 
 resource "aws_instance" "web" {
-  count                = var.web_server_count
-  ami                  = data.aws_ami.amazon_linux_2.id
-  instance_type        = var.instance_type
-  key_name             = var.key_name
-  subnet_id            = aws_subnet.public[count.index % length(aws_subnet.public)].id
+  count                  = var.web_server_count
+  ami                    = data.aws_ami.amazon_linux_2.id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+  subnet_id              = aws_subnet.public[count.index % length(aws_subnet.public)].id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
-  
+
   # Enable public IP assignment
   associate_public_ip_address = true
 
@@ -222,11 +222,11 @@ resource "aws_instance" "web" {
 # ===== EC2 INSTANCES - DB SERVERS (PRIVATE) =====
 
 resource "aws_instance" "db" {
-  count                = var.db_server_count
-  ami                  = data.aws_ami.amazon_linux_2.id
-  instance_type        = var.instance_type
-  key_name             = var.key_name
-  subnet_id            = aws_subnet.private[count.index % length(aws_subnet.private)].id
+  count                  = var.db_server_count
+  ami                    = data.aws_ami.amazon_linux_2.id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+  subnet_id              = aws_subnet.private[count.index % length(aws_subnet.private)].id
   vpc_security_group_ids = [aws_security_group.db_sg.id]
 
   tags = {

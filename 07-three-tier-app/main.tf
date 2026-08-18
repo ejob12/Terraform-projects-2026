@@ -18,9 +18,9 @@ module "vpc" {
 module "security_groups" {
   source = "./modules/security-groups"
 
-  app_name               = var.app_name
-  vpc_id                 = module.vpc.vpc_id
-  bastion_allowed_cidr   = var.bastion_allowed_cidr
+  app_name             = var.app_name
+  vpc_id               = module.vpc.vpc_id
+  bastion_allowed_cidr = var.bastion_allowed_cidr
 }
 
 # IAM Module
@@ -34,27 +34,27 @@ module "iam" {
 module "load_balancer" {
   source = "./modules/load-balancer"
 
-  app_name                = var.app_name
-  vpc_id                  = module.vpc.vpc_id
-  public_subnet_ids       = module.vpc.public_subnet_ids
-  alb_security_group_id   = module.security_groups.alb_security_group_id
+  app_name              = var.app_name
+  vpc_id                = module.vpc.vpc_id
+  public_subnet_ids     = module.vpc.public_subnet_ids
+  alb_security_group_id = module.security_groups.alb_security_group_id
 }
 
 # Bastion Host Module
 module "bastion" {
   source = "./modules/bastion"
 
-  app_name             = var.app_name
-  public_subnet_id     = module.vpc.public_subnet_ids[0]
-  security_group_id    = module.security_groups.bastion_security_group_id
-  key_pair_name        = var.bastion_key_pair_name
+  app_name          = var.app_name
+  public_subnet_id  = module.vpc.public_subnet_ids[0]
+  security_group_id = module.security_groups.bastion_security_group_id
+  key_pair_name     = var.bastion_key_pair_name
 }
 
 # EKS Module (Private Subnet)
 module "eks" {
   source = "./modules/eks"
 
-  app_name                   = var.app_name
+  app_name                  = var.app_name
   cluster_role_arn          = module.iam.eks_cluster_role_arn
   node_role_arn             = module.iam.eks_node_role_arn
   cluster_security_group_id = module.security_groups.eks_cluster_security_group_id
@@ -73,9 +73,9 @@ module "eks" {
 module "backend_servers" {
   source = "./modules/backend-servers"
 
-  app_name            = var.app_name
-  instance_count      = var.backend_instance_count
-  instance_type       = var.backend_instance_type
-  private_subnet_ids  = module.vpc.private_subnet_ids
-  security_group_id   = module.security_groups.backend_security_group_id
+  app_name           = var.app_name
+  instance_count     = var.backend_instance_count
+  instance_type      = var.backend_instance_type
+  private_subnet_ids = module.vpc.private_subnet_ids
+  security_group_id  = module.security_groups.backend_security_group_id
 }
