@@ -1,4 +1,4 @@
-name: Terraform - 04-iam-100-user+groups+roles (plan ++ apply-on-main)
+name: Terraform - 04-iam-100-user+groups+roles (plan +apply-on-main)
 
 on:
   push:
