@@ -4,10 +4,10 @@ on:
   push:
     paths:
       - '04-iam-100-user+groups+roles/**'
-  pull_request:
-    paths:
-      - '04-iam-100-user+groups+roles/**'
-  workflow_dispatch:
+  # pull_request:
+    # paths:
+     #  - '04-iam-100-user+groups+roles/**'
+  # workflow_dispatch:
 
 jobs:
   plan:
