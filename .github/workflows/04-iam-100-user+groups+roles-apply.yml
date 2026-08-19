@@ -13,6 +13,8 @@ jobs:
   plan:
     name: Plan
     runs-on: ubuntu-latest
+    env:
+      AWS_EC2_METADATA_DISABLED: 'true'
     defaults:
       run:
         shell: bash
@@ -23,6 +25,33 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: '1.5.7'
+
+      # --- Configure AWS credentials: prefer OIDC role, fallback to access keys ---
+      - name: Configure AWS credentials (OIDC role)
+        if: ${{ secrets.AWS_ROLE_TO_ASSUME != '' }}
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Configure AWS credentials (access keys fallback)
+        if: ${{ secrets.AWS_ROLE_TO_ASSUME == '' }}
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # --- Debugging helpers: confirm credentials are visible and working ---
+      - name: Debug: show AWS-related env vars
+        run: |
+          echo "GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME"
+          echo "GITHUB_REF=$GITHUB_REF"
+          env | grep -E 'AWS|AWS_ROLE' || true
+
+      - name: Debug: verify AWS identity (STS)
+        run: |
+          aws sts get-caller-identity || true
 
       - name: Terraform fmt
         run: terraform fmt -check -recursive
@@ -52,17 +81,33 @@ jobs:
     needs: plan
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: apply-04-iam-100-user+groups+roles
+    env:
+      AWS_EC2_METADATA_DISABLED: 'true'
     defaults:
       run:
         shell: bash
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials (OIDC)
+      # configure credentials for apply: same preference order
+      - name: Configure AWS credentials (OIDC role)
+        if: ${{ secrets.AWS_ROLE_TO_ASSUME != '' }}
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Configure AWS credentials (access keys fallback)
+        if: ${{ secrets.AWS_ROLE_TO_ASSUME == '' }}
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Debug: verify AWS identity (STS)
+        run: |
+          aws sts get-caller-identity || true
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
