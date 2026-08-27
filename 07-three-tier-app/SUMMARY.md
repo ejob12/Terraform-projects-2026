@@ -169,7 +169,7 @@ curl http://$ALB_DNS
 ssh -i my-key.pem ec2-user@<bastion-ip>
 
 # 2. Configure kubectl
-aws eks update-kubeconfig --region ca-central-1 --name three-tier-app-eks
+aws eks update-kubeconfig --region us-east-1 --name three-tier-app-eks
 
 # 3. Manage cluster
 kubectl get nodes
@@ -293,7 +293,7 @@ All components are fully customizable via `terraform.tfvars`:
 
 ```hcl
 # Network
-aws_region = "ca-central-1"
+aws_region = "us-east-1"
 vpc_cidr = "10.0.0.0/16"
 
 # EKS

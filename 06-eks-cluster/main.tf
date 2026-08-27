@@ -5,7 +5,7 @@ module "vpc" {
   cluster_name         = var.cluster_name
   vpc_name             = "${var.cluster_name}-vpc"
   vpc_cidr             = var.vpc_cidr
-  availability_zones   = data.aws_availability_zones.available.names
+  availability_zones   = slice(data.aws_availability_zones.available.names, 0, 3)
   public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
   private_subnet_cidrs = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
 }

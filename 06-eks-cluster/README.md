@@ -1,6 +1,6 @@
 # EKS Cluster Deployment with Terraform
 
-This Terraform configuration deploys a complete EKS cluster in `ca-central-1` with all required infrastructure using modular architecture.
+This Terraform configuration deploys a complete EKS cluster in `us-east-1` with all required infrastructure using modular architecture.
 
 ## Architecture Overview
 
@@ -20,7 +20,7 @@ The deployment includes:
 ## Configuration
 
 ### Default Settings
-- **Region**: ca-central-1
+- **Region**: us-east-1
 - **Instance Type**: t2.medium
 - **Desired Nodes**: 2
 - **Min Nodes**: 1
@@ -32,7 +32,7 @@ The deployment includes:
 Edit `terraform.tfvars` to customize:
 
 ```hcl
-aws_region      = "ca-central-1"
+aws_region      = "us-east-1"
 cluster_name    = "eks-cluster-ca"
 desired_size    = 2
 min_size        = 1
@@ -83,7 +83,7 @@ This will:
 After deployment completes, run:
 
 ```bash
-aws eks update-kubeconfig --region ca-central-1 --name eks-cluster-ca
+aws eks update-kubeconfig --region us-east-1 --name eks-cluster-ca
 ```
 
 Or use the output from Terraform:

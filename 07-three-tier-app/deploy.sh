@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_NAME="three-tier-app"
-REGION="ca-central-1"
+REGION="us-east-1"
 
 echo "=========================================="
 echo "Three-Tier App Deployment Script"

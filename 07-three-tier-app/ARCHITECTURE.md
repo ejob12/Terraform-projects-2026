@@ -205,7 +205,7 @@
 
 ### Regional Redundancy
 ```
-ca-central-1a
+us-east-1a
 ├─ Public Subnet 1
 │  ├─ ALB Instance 1
 │  └─ NAT Gateway 1
@@ -213,7 +213,7 @@ ca-central-1a
 │  ├─ EKS Node 1
 │  └─ Backend Server 1
 
-ca-central-1b
+us-east-1b
 ├─ Public Subnet 2
 │  ├─ ALB Instance 2
 │  └─ NAT Gateway 2
@@ -221,7 +221,7 @@ ca-central-1b
 │  ├─ EKS Node 2
 │  └─ Backend Server 2
 
-ca-central-1d (optional)
+us-east-1c (optional)
 ├─ Private Subnet 3
 │  ├─ EKS Node 3
 │  └─ Backend Server 3
@@ -274,7 +274,7 @@ spec:
 helm repo add autoscaler https://kubernetes.github.io/autoscaler
 helm install cluster-autoscaler autoscaler/cluster-autoscaler \
   --set autoDiscovery.clusterName=three-tier-app-eks \
-  --set awsRegion=ca-central-1
+  --set awsRegion=us-east-1
 ```
 
 ### Combined Scaling Flow

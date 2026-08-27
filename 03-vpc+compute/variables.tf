@@ -1,7 +1,7 @@
 variable "aws_region" {
   type        = string
   description = "AWS region"
-  default     = "ca-central-1"
+  default     = "us-east-1"
 }
 
 variable "environment" {
@@ -43,7 +43,7 @@ variable "private_subnet_cidrs" {
 variable "availability_zones" {
   type        = list(string)
   description = "Availability zones"
-  default     = ["ca-central-1a", "ca-central-1b"]
+  default     = ["us-east-1a", "us-east-1b"]
 }
 
 variable "instance_type" {

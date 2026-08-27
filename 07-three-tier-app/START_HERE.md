@@ -201,7 +201,7 @@ START_HERE.md (this file)
 
 ### Error: "Cannot access EKS cluster"
 → Make sure you SSH through bastion first
-→ Then run: `aws eks update-kubeconfig --region ca-central-1 --name three-tier-app-eks`
+→ Then run: `aws eks update-kubeconfig --region us-east-1 --name three-tier-app-eks`
 
 ### Still Stuck?
 → See **DEPLOYMENT_GUIDE.md** - Troubleshooting section
@@ -223,7 +223,7 @@ https://your-alb-dns.us-west-2.elb.amazonaws.com
 ssh -i your-key.pem ec2-user@bastion-public-ip
 
 # On bastion, manage cluster
-aws eks update-kubeconfig --region ca-central-1 --name three-tier-app-eks
+aws eks update-kubeconfig --region us-east-1 --name three-tier-app-eks
 kubectl get nodes
 kubectl apply -f deployment.yaml
 ```

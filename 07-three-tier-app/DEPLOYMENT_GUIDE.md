@@ -6,7 +6,7 @@
 
 ```bash
 aws ec2 create-key-pair --key-name my-app-key \
-  --region ca-central-1 \
+  --region us-east-1 \
   --query 'KeyMaterial' --output text > my-app-key.pem
 
 chmod 600 my-app-key.pem
@@ -84,11 +84,11 @@ ssh -i my-app-key.pem ec2-user@$BASTION_IP
 
 # 2. On bastion, configure AWS credentials
 aws configure
-# Enter: Access Key, Secret Key, region (ca-central-1)
+# Enter: Access Key, Secret Key, region (us-east-1)
 
 # 3. Get kubeconfig
 aws eks update-kubeconfig \
-  --region ca-central-1 \
+  --region us-east-1 \
   --name three-tier-app-eks
 
 # 4. Verify access
@@ -148,12 +148,12 @@ ssh -i my-app-key.pem \
 ```
 VPC: 10.0.0.0/16
 ├── Public Subnets (2 - Multi-AZ)
-│   ├── 10.0.1.0/24 (ca-central-1a) - ALB, Bastion
-│   └── 10.0.2.0/24 (ca-central-1b) - ALB redundancy
+│   ├── 10.0.1.0/24 (us-east-1a) - ALB, Bastion
+│   └── 10.0.2.0/24 (us-east-1b) - ALB redundancy
 ├── Private Subnets (3)
-│   ├── 10.0.11.0/24 (ca-central-1a) - EKS, Backend
-│   ├── 10.0.12.0/24 (ca-central-1b) - EKS, Backend
-│   └── 10.0.13.0/24 (ca-central-1d) - EKS, Backend
+│   ├── 10.0.11.0/24 (us-east-1a) - EKS, Backend
+│   ├── 10.0.12.0/24 (us-east-1b) - EKS, Backend
+│   └── 10.0.13.0/24 (us-east-1c) - EKS, Backend
 └── NAT Gateways (2)
     ├── In 10.0.1.0/24 (route from 10.0.11.0/24)
     └── In 10.0.2.0/24 (route from 10.0.12.0/24)
@@ -196,7 +196,7 @@ public_subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 backend "s3" {
   bucket         = "my-terraform-state"
   key            = "three-tier/terraform.tfstate"
-  region         = "ca-central-1"
+  region         = "us-east-1"
   encrypt        = true
   dynamodb_table = "terraform-locks"
 }
@@ -237,7 +237,7 @@ kubectl describe pod <pod-name> -n <namespace>
 ```bash
 aws elbv2 describe-target-health \
   --target-group-arn <target-group-arn> \
-  --region ca-central-1
+  --region us-east-1
 ```
 
 ## Troubleshooting
@@ -248,12 +248,12 @@ aws elbv2 describe-target-health \
 # Check bastion is running
 aws ec2 describe-instances \
   --filters "Name=tag:Name,Values=three-tier-app-bastion" \
-  --region ca-central-1
+  --region us-east-1
 
 # Check security group allows your IP
 aws ec2 describe-security-groups \
   --filters "Name=tag:Name,Values=three-tier-app-bastion-sg" \
-  --region ca-central-1
+  --region us-east-1
 ```
 
 ### EKS Nodes Not Ready
@@ -278,7 +278,7 @@ aws ec2 describe-instances \
 # Check target group
 aws elbv2 describe-target-health \
   --target-group-arn <arn> \
-  --region ca-central-1
+  --region us-east-1
 
 # Deploy ingress controller
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
@@ -312,7 +312,7 @@ EOF
 # Check security group rules
 aws ec2 describe-security-groups \
   --filters "Name=tag:Name,Values=three-tier-app-backend-sg" \
-  --region ca-central-1
+  --region us-east-1
 
 # Test connectivity from EKS node
 kubectl run debug --image=amazonlinux:2 -it -- /bin/bash

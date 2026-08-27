@@ -3,7 +3,7 @@
 ## Pre-Deployment
 - [x] Terraform modules created (VPC, Security Groups, IAM, EKS, Load Balancer, Bastion, Backend)
 - [x] Configuration files created (versions.tf, variables.tf, terraform.tfvars, outputs.tf, main.tf)
-- [x] AWS region set: ca-central-1
+- [x] AWS region set: us-east-1
 - [x] EC2 Key pair configured: sept23.perm
 
 ## Architecture Components
@@ -81,7 +81,7 @@ BASTION_IP=$(terraform output -raw bastion_public_ip)
 ssh -i sept23.perm ec2-user@$BASTION_IP
 
 # From bastion, configure kubectl
-aws eks update-kubeconfig --region ca-central-1 --name three-tier-app-eks
+aws eks update-kubeconfig --region us-east-1 --name three-tier-app-eks
 
 # Test cluster access
 kubectl get nodes

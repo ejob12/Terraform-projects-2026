@@ -98,7 +98,7 @@ A complete, production-ready three-tier application architecture deployed on AWS
 2. **Create EC2 Key Pair** (if not exists):
    ```bash
    aws ec2 create-key-pair --key-name your-keypair-name \
-     --region ca-central-1 \
+    --region us-east-1 \
      --query 'KeyMaterial' --output text > your-keypair-name.pem
    chmod 600 your-keypair-name.pem
    ```
@@ -159,7 +159,7 @@ ssh -i your-keypair-name.pem ec2-user@<bastion_public_ip>
 aws configure
 
 # Update kubeconfig
-aws eks update-kubeconfig --region ca-central-1 --name <cluster-name>
+aws eks update-kubeconfig --region us-east-1 --name <cluster-name>
 
 # Verify cluster access
 kubectl get nodes
@@ -209,11 +209,11 @@ Bastion → Backend Servers (22) → Database
 | Component | CIDR | Subnet Type |
 |-----------|------|------------|
 | VPC | 10.0.0.0/16 | - |
-| Public Subnet 1 | 10.0.1.0/24 | ca-central-1a |
-| Public Subnet 2 | 10.0.2.0/24 | ca-central-1b |
-| Private Subnet 1 | 10.0.11.0/24 | ca-central-1a |
-| Private Subnet 2 | 10.0.12.0/24 | ca-central-1b |
-| Private Subnet 3 | 10.0.13.0/24 | ca-central-1d |
+| Public Subnet 1 | 10.0.1.0/24 | us-east-1a |
+| Public Subnet 2 | 10.0.2.0/24 | us-east-1b |
+| Private Subnet 1 | 10.0.11.0/24 | us-east-1a |
+| Private Subnet 2 | 10.0.12.0/24 | us-east-1b |
+| Private Subnet 3 | 10.0.13.0/24 | us-east-1c |
 
 ## Customization
 

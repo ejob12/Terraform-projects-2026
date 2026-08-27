@@ -12,3 +12,8 @@ output "bastion_instance_id" {
   description = "Bastion Instance ID"
   value       = aws_instance.bastion.id
 }
+
+output "bastion_instance_arn" {
+  description = "Bastion Instance ARN"
+  value       = aws_instance.bastion.arn
+}
